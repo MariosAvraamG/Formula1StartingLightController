@@ -68,6 +68,7 @@ module f1fsm (
 				en_lfsr <= 1;
 			end else if( (current_state == DELAY) && time_out == 0 && started == 1)
 				start_delay <= 0;
+				
 		
 		end
 
