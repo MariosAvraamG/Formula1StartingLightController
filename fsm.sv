@@ -8,7 +8,7 @@ module f1fsm (
 	output logic [9:0] ledr
 );
 
-	logic timeout;
+	
 	logic [9:0] count;
 	logic [9:0] delay;
 
@@ -36,7 +36,7 @@ module f1fsm (
 					 else next_state = current_state;
 
             DELAY:
-                if (timeout)
+                if (time_out)
                     next_state = IDLE;
 					 else next_state = current_state;
 						  
@@ -51,11 +51,18 @@ module f1fsm (
 			if(((current_state == COUNT) && (count < 10) && (tick))) begin
 				ledr[9-count] <= 1;
 				count <= count +1;
+				
 			end 
 			
 			if(current_state == IDLE) begin
 				count <= 0;
 				ledr <= 0;
+				start_delay <= 0;
+			end 
+			
+			if( (current_state == DELAY) && time_out == 0 ) begin
+				start_delay <= 1;
+				en_lfsr <= 1;
 			end 
 		
 		end
