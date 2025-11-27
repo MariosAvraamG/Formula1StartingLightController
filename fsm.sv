@@ -2,7 +2,7 @@ module f1fsm (
 	input logic sysclk,
 	input logic tick,
 	input logic trigger,
-	input logic time_out;
+	input logic time_out,
 	output logic en_lfsr,
 	output logic start_delay,
 	output logic [9:0] ledr
