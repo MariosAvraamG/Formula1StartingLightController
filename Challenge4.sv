@@ -2,23 +2,23 @@ module Challenge4(
 	output logic [6:0] HEX0, HEX1, HEX2, HEX4,
 	output logic [7:0] HEX3,
 	input logic MAX10_CLK1_50,
-	input logic KEY[1],
+	input logic [1:0] KEY,
 	output logic [9:0] LEDR
 );
 	assign HEX3[7]=0;
 	logic tick_ms, tick_halfs, en_lfsr, start_delay, time_out;
 	logic [5:0] lfsr_out, lsfr_delay;
-	logic [3:0] BCD0, BCD1, BCD2, BCD3
+	logic [3:0] BCD0, BCD1, BCD2, BCD3;
 	
 	clktick  GEN_1K (.clk(MAX10_CLK1_50), .rst(1'b0), .en(1'b1), .N(16'd49999),  .tick(tick_ms));
 	clktick  GEN_2 (.clk(MAX10_CLK1_50), .rst(1'b0), .en(tick_ms), .N(16'd499),  .tick(tick_halfs));
 	
-	fsm FSM(.clk(tick_ms), .tick(tick_halfs), .trigger(~KEY[1]),  .time_out(time_out), .ledr(LEDR[9:0]), .start_delay(start_delay), .en_lfsr(en_lfsr));
+	f1fsm FSM(.clk(tick_ms), .tick(tick_halfs), .trigger(~KEY[1]),  .time_out(time_out), .ledr(LEDR[9:0]), .start_delay(start_delay), .en_lfsr(en_lfsr));
 	
 	delay Delay(.clk(tick_ms), .N(lfsr_out), .trigger(start_delay));
 	lfsr LFSR(.clk(tick_ms), .en(en_lfsr), .prbs(lfsr_out));
 	
-	assign lsfr_delay = (lsfr_out >> 2)
+	assign lsfr_delay = (lfsr_out >> 2);
 	
 	bin2bcd hextobcd(.x({10'd0, lsfr_delay}), .BCD0(BCD0), .BCD1(BCD1), .BCD2(BCD2), .BCD3(BCD3),  .BCD4(BCD4));
 	
