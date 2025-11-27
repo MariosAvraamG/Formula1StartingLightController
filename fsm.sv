@@ -26,21 +26,39 @@ module f1fsm (
 
         case (current_state)
             IDLE:
-                if (trigger)
+					if (trigger)
                     next_state = COUNT;
+					else next_state = current_state;
 
             COUNT:
-                if (count == 9)
+                if (count > 9)
                     next_state = DELAY;
+					 else next_state = current_state;
 
             DELAY:
                 if (timeout)
                     next_state = IDLE;
+					 else next_state = current_state;
+						  
+				default: next_state = IDLE;
+						  
         endcase
 		  
 		end
-
-
+		
+		
+		always_ff @(posedge sysclk) begin
+			if(((current_state == COUNT) && (count < 10) && (tick))) begin
+				ledr[count] <= 1;
+				count <= count +1;
+			end 
+			
+			if(current_state == IDLE) begin
+				count <= 0;
+				ledr <= 0;
+			end 
+		
+		end
 
 
 
