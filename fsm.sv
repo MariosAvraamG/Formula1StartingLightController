@@ -2,14 +2,16 @@ module f1fsm (
 	input logic sysclk,
 	input logic tick,
 	input logic trigger,
+	input logic time_out,
 	output logic en_lfsr,
 	output logic start_delay,
 	output logic [9:0] ledr
 );
 
-	logic timeout;
+	
 	logic [9:0] count;
 	logic [9:0] delay;
+	logic started;
 
 
 	typedef enum{IDLE, COUNT, DELAY} my_state;
@@ -17,69 +19,69 @@ module f1fsm (
 
 	always_ff @(posedge sysclk)
 		current_state <= next_state;
+		
+		
 
+	always_comb begin
+        
 
-	always_comb
-case (current_state)
+        case (current_state)
+            IDLE:
+					if (trigger)
+                    next_state = COUNT;
+					else next_state = current_state;
 
-IDLE: begin
+            COUNT:
+                if (count > 9)
+                    next_state = DELAY;
+					 else next_state = current_state;
 
-if(trigger)
-next_state = COUNT;
-else next_state = current_state;
-end
-
-DELAY: begin
-
-if(timeout)
-next_state = IDLE;
-else next_state = current_state;
-end
-
-COUNT: begin
-if(count == 10)
-next_state = DELAY;
-else next_state = current_state;
-
-end
-
-default:next_state =IDLE;
-
-
-endcase
-
-always_comb
-case (count)
-
-1: ledr[0] = 1;
-2: ledr[1] = 1;
-3: ledr[2] = 1;
-4: ledr[3] = 1;
-5: ledr[4] = 1;
-6: ledr[5] = 1;
-7: ledr[6] = 1;
-8: ledr[7] = 1;
-9: ledr[8] = 1;
-10:ledr[9] = 1;
-default: ledr = 0;
-endcase
-
-
-
-always_ff @(posedge sysclk && tick) begin
-if ((count < 10) && (current_state == COUNT))
-count <= count + 1;
-else count <= 0 ;
- timeout <=1 ;
-end
-
-
-
-
-
-
-
+            DELAY:
+                if (time_out)
+                    next_state = IDLE;
+					 else next_state = current_state;
+						  
+				default: next_state = IDLE;
+						  
+        endcase
+		  
+		end
+		
+		
+		always_ff @(posedge sysclk) begin
+			if(((current_state == COUNT) && (count < 10) && (tick))) begin
+				ledr[9-count] <= 1;
+				count <= count +1;
+				
+			end 
+			
+			if(current_state == IDLE) begin
+				count <= 0;
+				ledr <= 0;
+				start_delay <= 0;
+				started <= 0;
+			end 
+			
+			if( (current_state == DELAY) && time_out == 0 && started == 0) begin
+				start_delay <= 1;
+				started <= 1;
+				en_lfsr <= 1;
+			end else if( (current_state == DELAY) && time_out == 0 && started == 1)
+				start_delay <= 0;
+		
+		end
 
 
 
 endmodule
+
+	
+	
+
+
+
+
+
+
+
+
