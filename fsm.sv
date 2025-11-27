@@ -18,65 +18,41 @@ module f1fsm (
 
 	always_ff @(posedge sysclk)
 		current_state <= next_state;
+		
+		
 
-
-	always_comb
-case (current_state)
-
-IDLE: begin
-
-if(trigger)
-next_state = COUNT;
-else next_state = current_state;
-end
-
-DELAY: begin
-
-if(timeout)
-next_state = IDLE;
-else next_state = current_state;
-end
-
-COUNT: begin
-if(count == 10)
-next_state = DELAY;
-else next_state = current_state;
-
-end
-
-default:next_state =IDLE;
-
-
-endcase
-
-
-
-
-
-always_ff @(posedge sysclk) begin
-    if (tick) begin
+	always_comb begin
         
 
-        if (current_state == COUNT) begin
-            if (count < 10) begin
-                count <= count + 1;
-                ledr[count] <= 1;
-            end else begin
-                count   <= 0;
-                timeout <= 1;
-            end
-        end
-    end
-end
+        case (current_state)
+            IDLE:
+                if (trigger)
+                    next_state = COUNT;
 
+            COUNT:
+                if (count == 9)
+                    next_state = DELAY;
 
-
-
-
-
+            DELAY:
+                if (timeout)
+                    next_state = IDLE;
+        endcase
+		  
+		end
 
 
 
 
 
 endmodule
+
+	
+	
+
+
+
+
+
+
+
+
