@@ -11,6 +11,7 @@ module f1fsm (
 	
 	logic [9:0] count;
 	logic [9:0] delay;
+	logic started;
 
 
 	typedef enum{IDLE, COUNT, DELAY} my_state;
@@ -58,12 +59,15 @@ module f1fsm (
 				count <= 0;
 				ledr <= 0;
 				start_delay <= 0;
+				started <= 0;
 			end 
 			
-			if( (current_state == DELAY) && time_out == 0 ) begin
+			if( (current_state == DELAY) && time_out == 0 && started == 0) begin
 				start_delay <= 1;
+				started <= 1;
 				en_lfsr <= 1;
-			end 
+			end else if( (current_state == DELAY) && time_out == 0 && started == 1)
+				start_delay <= 0;
 		
 		end
 

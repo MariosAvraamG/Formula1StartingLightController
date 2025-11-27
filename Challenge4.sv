@@ -15,7 +15,7 @@ module Challenge4(
 	
 	f1fsm FSM(.sysclk(tick_ms), .tick(tick_halfs), .trigger(~KEY[1]),  .time_out(time_out), .ledr(LEDR[9:0]), .start_delay(start_delay), .en_lfsr(en_lfsr));
 	
-	delay Delay(.clk(tick_ms), .rst(1), .N(5), .trigger(start_delay), .time_out(time_out));
+	delay Delay(.clk(tick_halfs), .rst(0), .N(5), .trigger(start_delay), .time_out(time_out));
 	//lfsr LFSR(.clk(tick_ms), .en(en_lfsr), .prbs(lfsr_out));
 	
 assign lsfr_delay = (lfsr_out >> 2);
