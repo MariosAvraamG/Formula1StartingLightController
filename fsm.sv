@@ -49,7 +49,7 @@ module f1fsm (
 		
 		always_ff @(posedge sysclk) begin
 			if(((current_state == COUNT) && (count < 10) && (tick))) begin
-				ledr[count] <= 1;
+				ledr[9-count] <= 1;
 				count <= count +1;
 			end 
 			
