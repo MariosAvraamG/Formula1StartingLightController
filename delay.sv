@@ -1,5 +1,5 @@
 module delay #(
-	parameter WIDTH = 7
+	parameter WIDTH = 14
 )(
 
 
