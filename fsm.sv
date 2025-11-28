@@ -58,7 +58,7 @@ module f1fsm (
 			if(current_state == IDLE) begin
 				count <= 0;
 				ledr <= 0;
-				start_delay <= 0;
+				start_delay <= 1;
 				started <= 0;
 			end 
 			

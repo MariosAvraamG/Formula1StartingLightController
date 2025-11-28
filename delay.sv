@@ -7,7 +7,8 @@ module delay #(
 	input logic rst,
 	input logic trigger,
 	input logic [WIDTH-1:0] N,
-	output logic time_out
+	output logic time_out,
+	output logic [WIDTH-1:0] count_test
 );
 
  
@@ -59,8 +60,10 @@ module delay #(
 	always_ff @(posedge clk)
 		 if (rst | trigger | count == {WIDTH{1'b0}})
 			  count <= N - 1'b1;
-		 else
+		 else begin
 			  count <= count - 1'b1;
+			  count_test <= count;
+			  end
 
 	// state transition
 	always_ff @(posedge clk)
