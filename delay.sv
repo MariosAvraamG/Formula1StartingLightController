@@ -5,8 +5,7 @@ module delay #(
 	input logic rst,
 	input logic trigger,
 	input logic [WIDTH-1:0] N,
-	output logic time_out,
-	output logic [WIDTH-1:0] count_test
+	output logic time_out
 );
 
  
