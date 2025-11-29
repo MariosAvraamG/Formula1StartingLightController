@@ -8,7 +8,7 @@ module Challenge4(
 	assign HEX3[7]=0;
 	logic tick_ms, tick_halfs, en_lfsr, start_delay, time_out;
 	logic [3:0] BCD0, BCD1, BCD2, BCD3;
-	logic [13:0] random_delay, count;
+	logic [13:0] random_delay;
 	
 	
 	clktick  GEN_1K (.clk(MAX10_CLK1_50), .rst(1'b0), .en(1'b1), .N(16'd49999),  .tick(tick_ms));
@@ -16,7 +16,7 @@ module Challenge4(
 	
 	f1fsm FSM(.sysclk(tick_ms), .tick(tick_halfs), .trigger(~KEY[1]),  .time_out(time_out), .ledr(LEDR[9:0]), .start_delay(start_delay), .en_lfsr(en_lfsr));
 	
-	delay Delay(.clk(tick_ms), .rst(0), .N(random_delay), .trigger(start_delay), .time_out(time_out), .count_test (count));
+	delay Delay(.clk(tick_ms), .rst(0), .N(random_delay), .trigger(start_delay), .time_out(time_out));
 	lfsr14 lfsr(.clk(tick_ms), .en(en_lfsr), .prbs(random_delay));
 	
 	bin2bcd_16 hextobcd(.x({2'd0, random_delay}), .BCD0(BCD0), .BCD1(BCD1), .BCD2(BCD2), .BCD3(BCD3),  .BCD4(BCD4));

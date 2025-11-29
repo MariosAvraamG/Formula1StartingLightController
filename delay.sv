@@ -60,7 +60,6 @@ module delay #(
 			  count <= N - 1'b1;
 		 else begin
 			  count <= count - 1'b1;
-			  count_test <= count;
 			  end
 
 	// state transition
