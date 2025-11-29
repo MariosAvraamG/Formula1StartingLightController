@@ -1,8 +1,6 @@
 module delay #(
 	parameter WIDTH = 14
 )(
-
-
 	input logic clk,
 	input logic rst,
 	input logic trigger,
